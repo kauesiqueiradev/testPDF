@@ -1,0 +1,56 @@
+<!-- <div class="file-list">
+    <h1>Página de Arquivos: </h1>
+    @if ( folders && folders.length > 0) {
+        @for (folder of folders; track folders) {
+            <a (click)="getFiles(folder.name)">{{ folder.name }}</a>
+            
+            @if (files.length > 0) {
+                <h2>arquivos: </h2>
+                <ul>
+                    <li>
+                    @for ( file of files; track file) {
+                        <a href="{{ file.fileUrl }}" target="_blank">{{ file.fileName }}</a>
+                    } @empty {
+                        <p>Não tem arquivos</p>
+                    }
+                    </li>
+                </ul>
+            }
+        } @empty {
+            <p>Não tem arquivos</p>
+         }
+        } @else{
+            <p>Não tem arquivos</p>
+        }
+</div> -->
+
+<div class="file-list">
+    <h1>Página de Arquivos:</h1>
+    <div *ngIf="folders && folders.length > 0; else noFolders">
+        <div *ngFor="let folder of folders">
+            <a href="javascript:void(0)" (click)="toggleFiles(folder.name)">{{ folder.name }}</a>
+            <ul *ngIf="isOpenFolder(folder.name)">
+                <li *ngFor="let file of getFilesForFolder(folder.name)">
+                    <p (click)="PreviewInvoice(folder.name, file.fileName)">{{ file.fileName }}</p>
+                </li>
+                <!-- <p *ngIf="!getFilesForFolder(folder.name) || getFilesForFolder(folder.name).length === 0">Não há arquivos nesta pasta.</p> -->
+            </ul>
+        </div>
+    </div>
+    <ng-template #noFolders>
+        <p>Não há pastas disponíveis.</p>
+    </ng-template>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title"><b>Arquivo</b></h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<ngx-extended-pdf-viewer [src]="pdfUrl" height="700px" width="1000px" [textLayer]="true"></ngx-extended-pdf-viewer>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-danger" (click)="d('Cross click')">Close</button>
+	</div>
+</ng-template>
